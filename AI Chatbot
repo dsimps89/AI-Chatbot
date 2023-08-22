@@ -1,0 +1,54 @@
+MIT Open Data License (Generic Script)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this script and associated documentation files (the "Script"), to deal in the Script without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Script, and to permit persons to whom the Script is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Script.
+
+THE SCRIPT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SCRIPT OR THE USE OR OTHER DEALINGS IN THE SCRIPT.
+
+
+
+import openai
+
+# Set your OpenAI API key here
+openai.api_key = "YOUR_API_KEY"
+
+def generate_prompt(user_data):
+    prompt = f"Based on the data I have about you, let's talk about {user_data['topic']}!"
+    return prompt
+
+def get_user_data():
+    # Replace this with your actual data or user input retrieval logic
+    user_data = {
+        "name": "John",
+        "age": 30,
+        "interests": ["movies", "travel"],
+        "topic": "your recent trip to Paris"
+    }
+    return user_data
+
+def main():
+    user_data = get_user_data()
+    prompt = generate_prompt(user_data)
+    
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            print("Chatbot: Goodbye!")
+            break
+        
+        # Combine user input with the generated prompt
+        combined_input = f"You: {user_input}\nChatbot:"
+        
+        # Use GPT-3.5 to generate a response
+        response = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=combined_input,
+            max_tokens=50  # Limit the response length
+        )
+        
+        # Print the response from the chatbot
+        print(response.choices[0].text.strip())
+
+if __name__ == "__main__":
+    main()
