@@ -9,46 +9,57 @@ THE SCRIPT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED
 
 
 import openai
+import random
+import time
 
 # Set your OpenAI API key here
 openai.api_key = "YOUR_API_KEY"
 
-def generate_prompt(user_data):
-    prompt = f"Based on the data I have about you, let's talk about {user_data['topic']}!"
+def generate_random_prompt(user_data):
+    random_topic = random.choice(user_data['interests'])
+    prompt = f"Hey there! Let's talk about {random_topic}. What's your opinion?"
     return prompt
 
 def get_user_data():
-    # Replace this with your actual data or user input retrieval logic
-    user_data = {
-        "name": "John",
-        "age": 30,
-        "interests": ["movies", "travel"],
-        "topic": "your recent trip to Paris"
-    }
-    return user_data
+    # Replace this with your actual user data retrieval logic
+    user_database = [
+        {
+            "name": "John",
+            "age": 30,
+            "interests": ["movies", "travel"],
+        },
+        {
+            "name": "Emily",
+            "age": 25,
+            "interests": ["cooking", "books"],
+        },
+        # Add more user data entries
+    ]
+    return user_database
 
 def main():
-    user_data = get_user_data()
-    prompt = generate_prompt(user_data)
+    user_database = get_user_data()
     
     while True:
-        user_input = input("You: ")
-        if user_input.lower() == "exit":
-            print("Chatbot: Goodbye!")
-            break
+        # Generate a random time interval between 5 to 15 seconds
+        random_interval = random.randint(5, 15)
         
-        # Combine user input with the generated prompt
-        combined_input = f"You: {user_input}\nChatbot:"
+        print(f"Waiting for {random_interval} seconds...")
+        time.sleep(random_interval)  # Wait for the random interval
         
-        # Use GPT-3.5 to generate a response
+        # Select a random user's data from the database
+        random_user_data = random.choice(user_database)
+        random_prompt = generate_random_prompt(random_user_data)
+        
+        # Generate a response using the random prompt
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt=combined_input,
-            max_tokens=50  # Limit the response length
+            prompt=random_prompt,
+            max_tokens=50
         )
         
-        # Print the response from the chatbot
-        print(response.choices[0].text.strip())
+        # Print the chatbot's response
+        print(f"Chatbot: {response.choices[0].text.strip()}")
 
 if __name__ == "__main__":
     main()
